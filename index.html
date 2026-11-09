@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>temantisucn</title>
+<style>body{margin:0;padding:20px;font-family:system-ui;max-width:600px;margin:auto}input{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;margin:10px 0;font-size:16px}button{width:100%;padding:14px;border:0;border-radius:999px;color:#fff;font-size:17px;font-weight:700}.card{border:2px solid #ddd;border-radius:16px;padding:16px;margin:16px 0}html.is-link body{display:none}html.is-link #loading{display:flex}#loading{display:none;position:fixed;inset:0;background:#fff;align-items:center;justify-content:center;font-size:18px}</style>
+<script>if(location.hash.length>1){document.documentElement.classList.add('is-link')}</script>
+</head><body>
+<div id="loading">Mengalihkan...</div>
+<h1>Upload your videos<br><span style="color:#888">and share</span></h1>
+<div class="card" style="border-color:#3b82f6"><h3>⚡ Buat Link Video</h3><input id="vIn" placeholder="Tempel kode, contoh: XctMJp7x1"><button style="background:#3b82f6" onclick="buatVideo()">Buat Link Video</button></div>
+<div class="card" style="border-color:#f97316"><h3>🛒 Bungkus Link Shopee</h3><input id="sIn" placeholder="Tempel link Shopee lengkap"><button style="background:#f97316" onclick="buatShopee()">Bungkus Link Shopee</button></div>
+<div id="res" class="card" style="display:none"></div>
+<div id="wrap" style="display:none"><h2>Video Terbaru Tersedia!</h2><button id="playBtn" style="background:#3b82f6">BUKA VIDEO</button><video id="vid" controls playsinline style="width:100%;display:none"></video></div>
+<script>
+const U="https://feeymfxyxaktzrqagmjn.supabase.co"; const K="sb_publishable_DvBw2b3LIiGhlhZt4C6BBQ_YQP5MLOl";
+function makeId(){let s="",c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function show(l){let r=document.getElementById('res');r.style.display='block';r.innerHTML='<b>Link kamu:</b><br><a href="'+l+'">'+l+'</a><br><br><button style="background:#111" onclick="navigator.clipboard.writeText(\''+l+'\');alert(\'Tersalin!\')">Salin Link</button>'}
+function buatVideo(){let c=document.getElementById('vIn').value.trim().split('/').pop().split('?')[0];if(!c)return alert('Tempel kode dulu!');show(location.origin+'/#'+c)}
+async function buatShopee(){let url=document.getElementById('sIn').value.trim();if(!url.startsWith('http'))return alert('Tempel link Shopee lengkap!');let id=makeId();let r=await fetch(U+'/rest/v1/shopee_links',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({id:id,url:url})});if(!r.ok)return alert('Gagal simpan!');show(location.origin+'/#'+id)}
+function openVideo(code){document.documentElement.classList.remove('is-link');document.getElementById('wrap').style.display='block';document.getElementById('playBtn').onclick=()=>{document.getElementById('playBtn').style.display='none';let v=document.getElementById('vid');v.style.display='block';v.src='https://cdn.videy.co/'+code+'.mp4';v.play()}}
+function openShopee(url){if(/Android/i.test(navigator.userAgent)){let sc=url.split('/').pop().split('?')[0];window.location.href='intent://s.shopee.co.id/'+sc+'#Intent;scheme=https;package=com.shopee.id;S.browser_fallback_url='+encodeURIComponent(url)+';end';setTimeout(()=>{window.location.replace(url)},900);return}window.location.replace(url)}
+async function go(){let h=location.hash.replace('#','').trim();if(!h)return;if(h.startsWith('v=')){openVideo(h.slice(2));return}if(h.startsWith('s=')){window.location.replace(atob(h.slice(2)));return}try{let r=await fetch(U+'/rest/v1/shopee_links?select=url&id=eq.'+encodeURIComponent(h),{headers:{apikey:K,Authorization:'Bearer '+K}});let d=await r.json();if(d[0]&&d[0].url){openShopee(d[0].url);return}}catch(e){}openVideo(h)}go();
+</script></body></html>
