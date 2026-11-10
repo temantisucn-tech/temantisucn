@@ -13,7 +13,8 @@
 </div>
 <script>
 const U="https://feeymfxyxaktzrqagmjn.supabase.co"; const K="sb_publishable_DvBw2b3LIiGhlhZt4C6BBQ_YQP5MLOl";
-const SITE_PASSWORD="temantisucn123";
+const SITE_PASSWORD="yuzu
+  ";
 function cekPass(){let p=document.getElementById('passIn').value;if(p===SITE_PASSWORD){sessionStorage.setItem('teman_ok','1');document.body.classList.remove('locked')}else{document.getElementById('passErr').style.display='block'}}
 if(sessionStorage.getItem('teman_ok')!=='1'){document.body.classList.add('locked')}
 function makeId(){let s="",c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
