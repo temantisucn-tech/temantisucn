@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teman Tisu</title></head>
+<body style="font-family:system-ui;text-align:center;padding:20px;max-width:500px;margin:auto;background:#000;color:#fff;min-height:100vh">
+<div id="lock">
+<h1>🔒 Terkunci</h1>
+<p>Hanya pemilik yang bisa buka!</p>
+<input id="pw" type="password" placeholder="Masukkan sandi" style="padding:12px;border-radius:10px;border:0;width:80%">
+<br><br>
+<button onclick="buka()" style="padding:12px 28px;border:0;border-radius:999px;background:#ff0000;color:#fff;font-weight:700">Buka</button>
+<p id="err" style="color:#ff5555"></p>
+</div>
+<div id="main" style="display:none">
+<h1>Buat Link Shopee</h1>
+<input id="url" placeholder="Tempel link Shopee s.shopee.co.id/..." style="padding:12px;border-radius:10px;border:0;width:90%">
+<br><br>
+<button onclick="buat()" style="padding:12px 28px;border:0;border-radius:999px;background:#229ED9;color:#fff;font-weight:700">Buat Link</button>
+<p id="hasil"></p>
+</div>
+<script>
+const SITE_PASSWORD = "Yuzu";
+function buka(){
+  if(document.getElementById('pw').value === SITE_PASSWORD){
+    document.getElementById('lock').style.display='none';
+    document.getElementById('main').style.display='block';
+  } else {
+    document.getElementById('err').innerText='Sandi salah!';
+  }
+}
+async function buat(){
+  const url=document.getElementById('url').value.trim();
+  if(!url) return;
+  const code=Math.random().toString(36).slice(2,8);
+  const U="https://feeymfxyxaktzrqagmjn.supabase.co";
+  const K="sb_publishable_DvBw2b3LIiGhlhZt4C6BBQ_YQP5MLOl";
+  await fetch(U+"/rest/v1/shopee_links",{method:"POST",headers:{apikey:K,Authorization:"Bearer "+K,"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({id:code,url:url})});
+  document.getElementById('hasil').innerHTML='Link kamu:<br><b>temantisucn.vercel.app/'+code+'</b>';
+}
+</script>
+</body></html>
